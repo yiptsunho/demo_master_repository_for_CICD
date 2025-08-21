@@ -71,3 +71,5 @@ jobs:
               "module": "${{ github.event.client-payload.module }}",
               "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
             }
+      - name: Clear local changes
+        run : git restore .
