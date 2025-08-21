@@ -78,7 +78,7 @@ jobs:
           token: ${{ secrets.MODULE_REPO_TOKEN }}
           repository: yiptsunho/demo_module_repository_for_CICD
           event-type: test-results
-          client-payload: |
+          client-payload: |-
             {
               "test_status": "${{ job.status }}",
               "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
