@@ -12,27 +12,20 @@ jobs:
     steps:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          extensions: mbstring, curl, pdo_mysql
-      - name: Install Module Dependencies
-        run: echo "Install module dependencies script placeholder"
-        # Example: composer require your-org/module-crm your-org/module-accounting
-      # - name: Install Main Dependencies
-      #   run: composer install
-      - name: Build Application
-        run: echo "Build application script placeholder"
-        # Example: php artisan optimize
       - name: Deploy to CI/CD Server
         run: |
+          # Set up SSH key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ github.ref == 'refs/heads/main' && 'prod-server' || 'ci-cd-server' }} >> ~/.ssh/known_hosts
+          # Deploy to server
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "Deploy to production"
-            # Example: rsync -avz . user@prod-server:/path/to/app
+            rsync -avz --exclude '.git' . user@prod-server:/path/to/app
+            ssh user@prod-server 'cd /path/to/app && git pull origin main && composer install --no-dev'
           else
-            echo "Deploy to UAT"
-            # Example: rsync -avz . user@uat-server:/path/to/app
+            rsync -avz --exclude '.git' . user@ci-cd-server:/path/to/app
+            ssh user@ci-cd-server 'cd /path/to/app && git pull origin uat && composer install --no-dev'
           fi
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
