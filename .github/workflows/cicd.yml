@@ -68,5 +68,8 @@ jobs:
               "test_status": "${{ job.status }}",
               "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
               "commit": "${{ github.event.client-payload.commit }}",
-              "module": "${{ github.event.client-payload.module }}"
+              "module": "${{ github.event.client-payload.module }}",
+              "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
             }
+      - name: Clear local changes
+        run : git restore .
