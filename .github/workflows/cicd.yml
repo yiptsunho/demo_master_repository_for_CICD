@@ -61,7 +61,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.MODULE_REPO_TOKEN }}
-          repository: your-org/${{ github.event.client-payload.module }}
+          repository: yiptsunho/demo_module_repository_for_CICD
           event-type: test-results
           client-payload: |
             {
