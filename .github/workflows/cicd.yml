@@ -21,7 +21,7 @@ jobs:
           ssh-keyscan -H 172.105.105.144 >> ~/.ssh/known_hosts
           # Deploy to server
           # if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            rsync -avz --exclude '.git' . root@172.105.105.144:/path/to/app
+            rsync -avz --exclude '.git' . root@172.105.105.144:~/root/repo/demo_master_repository_for_CICD
             ssh root@172.105.105.144 'cd ~/root/repo/demo_master_repository_for_CICD && git pull origin main'
           # else
             # rsync -avz --exclude '.git' . user@ci-cd-server:/path/to/app
