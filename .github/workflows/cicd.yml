@@ -6,43 +6,56 @@ on:
     branches:
       - main
       - uat
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1' # Adjust to your PHP version
+          extensions: mbstring, curl, pdo_mysql # Add required extensions
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
       - name: Install Module Dependencies
         run: echo "Install module dependencies script placeholder"
+        # Example (when ready): composer require your-org/module-crm your-org/module-accounting
       - name: Install Main Dependencies
-        run: npm install
+        run: composer install
+        # Assumes Composer for PHP dependencies; adjust if using another method
       - name: Build Application
         run: echo "Build application script placeholder"
+        # Example (when ready): php artisan optimize || true
       - name: Deploy to CI/CD Server
         run: |
-          # Example: Deploy via SSH
-          # ssh -o StrictHostKeyChecking=no user@ci-cd-server 'docker pull your-org/app:latest && docker run -d -p 8080:8080 your-org/app:latest'
-          echo "Deploy to CI/CD Server script placeholder"
-        # env:
-          # SSH_KEY: ${{ secrets.SSH_KEY }}
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "Deploy to production"
+            # Example: scp -r . user@prod-server:/path/to/app
+          else
+            echo "Deploy to UAT"
+            # Example: scp -r . user@uat-server:/path/to/app
+          fi
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Install Node.js Dependencies for Tests
+        run: npm install
       - name: Run API Tests
         id: api-tests
         run: |
-          # Save test results to a file
           npm test index -- --json > test-results.json
         env:
-          API_URL: http://ci-cd-server:8080
+          API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: test-results.json
+          retention-days: 7
       - name: Notify Module Repository
-        if: always() # Run even if tests fail
+        if: always()
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.MODULE_REPO_TOKEN }}
