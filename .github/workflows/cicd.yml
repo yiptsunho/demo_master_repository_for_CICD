@@ -18,15 +18,15 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ github.ref == 'refs/heads/main' && 'prod-server' || 'ci-cd-server' }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H 172.105.105.144 >> ~/.ssh/known_hosts
           # Deploy to server
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            rsync -avz --exclude '.git' . user@prod-server:/path/to/app
-            ssh user@prod-server 'cd /path/to/app && git pull origin main && composer install --no-dev'
-          else
-            rsync -avz --exclude '.git' . user@ci-cd-server:/path/to/app
-            ssh user@ci-cd-server 'cd /path/to/app && git pull origin uat && composer install --no-dev'
-          fi
+          # if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            rsync -avz --exclude '.git' . root@172.105.105.144:/path/to/app
+            ssh root@172.105.105.144 'cd ~/root/repo/demo_master_repository_for_CICD && git pull origin main'
+          # else
+            # rsync -avz --exclude '.git' . user@ci-cd-server:/path/to/app
+            # ssh user@ci-cd-server 'cd /path/to/app && git pull origin uat && composer install --no-dev'
+          # fi
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Checkout Test Repository
