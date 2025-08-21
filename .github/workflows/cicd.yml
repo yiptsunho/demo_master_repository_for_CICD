@@ -51,16 +51,23 @@ jobs:
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
       - name: Upload Test Results
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: test-results.json
           retention-days: 7
       - name: Debug MODULE_REPO_TOKEN
-        if: always()
         run: |
           echo "MODULE_REPO_TOKEN is set: ${{ secrets.MODULE_REPO_TOKEN != '' }}"
+      - name: Debug Client Payload
+        run: |
+          echo '{
+            "test_status": "${{ job.status }}",
+            "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "commit": "${{ github.event.client-payload.commit || github.sha }}",
+            "module": "demo_module_repository_for_CICD",
+            "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
+          }'
       - name: Notify Module Repository
         if: always()
         uses: peter-evans/repository-dispatch@v2
