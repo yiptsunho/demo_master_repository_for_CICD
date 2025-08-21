@@ -14,33 +14,28 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1' # Adjust to your PHP version
-          extensions: mbstring, curl, pdo_mysql # Add required extensions
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+          php-version: '8.1'
+          extensions: mbstring, curl, pdo_mysql
       - name: Install Module Dependencies
         run: echo "Install module dependencies script placeholder"
-        # Example (when ready): composer require your-org/module-crm your-org/module-accounting
-      - name: Install Main Dependencies
-        run: composer install
-        # Assumes Composer for PHP dependencies; adjust if using another method
+      # - name: Install Main Dependencies
+      #   run: composer install
       - name: Build Application
         run: echo "Build application script placeholder"
-        # Example (when ready): php artisan optimize || true
       - name: Deploy to CI/CD Server
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "Deploy to production"
-            # Example: scp -r . user@prod-server:/path/to/app
           else
             echo "Deploy to UAT"
-            # Example: scp -r . user@uat-server:/path/to/app
           fi
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
-      - name: Install Node.js Dependencies for Tests
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install Test Dependencies
         run: npm install
       - name: Run API Tests
         id: api-tests
