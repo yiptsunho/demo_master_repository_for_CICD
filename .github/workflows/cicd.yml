@@ -10,7 +10,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Main Repository
+        uses: actions/checkout@v4
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -18,29 +19,42 @@ jobs:
           extensions: mbstring, curl, pdo_mysql
       - name: Install Module Dependencies
         run: echo "Install module dependencies script placeholder"
+        # Example: composer require your-org/module-crm your-org/module-accounting
       # - name: Install Main Dependencies
       #   run: composer install
       - name: Build Application
         run: echo "Build application script placeholder"
+        # Example: php artisan optimize
       - name: Deploy to CI/CD Server
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "Deploy to production"
+            # Example: rsync -avz . user@prod-server:/path/to/app
           else
             echo "Deploy to UAT"
+            # Example: rsync -avz . user@uat-server:/path/to/app
           fi
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Checkout Test Repository
+        uses: actions/checkout@v4
+        with:
+          repository: your-org/test-repo
+          token: ${{ secrets.TEST_REPO_TOKEN }}
+          path: test-repo
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
       - name: Install Test Dependencies
-        run: npm install
+        run: |
+          cd test-repo
+          npm install
       - name: Run API Tests
         id: api-tests
         run: |
-          npm test index -- --json > test-results.json
+          cd test-repo
+          npm test index -- --json > ../test-results.json
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
       - name: Upload Test Results
