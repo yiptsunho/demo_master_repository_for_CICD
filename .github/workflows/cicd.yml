@@ -46,7 +46,7 @@ jobs:
       - name: Run API Tests
         id: api-tests
         run: |
-#          set -e
+#          set -
           cd test-repo
           npm test index; true
           echo "Listing files in test-repo:"
