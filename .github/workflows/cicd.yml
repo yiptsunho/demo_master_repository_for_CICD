@@ -46,6 +46,7 @@ jobs:
       - name: Run API Tests
         id: api-tests
         run: |
+          set -e
           cd test-repo
           npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults; true
           echo "Listing files in test-repo:"
