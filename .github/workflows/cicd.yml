@@ -67,7 +67,7 @@ jobs:
           echo '{
             "test_status": "${{ job.status }}",
             "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "commit": "${{ github.event.client-payload.commit || github.sha }}",
+            "commit": "${{ github.event.client_payload.commit || github.sha }}",
             "module": "demo_module_repository_for_CICD",
             "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
           }'
@@ -82,7 +82,7 @@ jobs:
             {
               "test_status": "${{ job.status }}",
               "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "commit": "${{ github.event.client-payload.commit || github.sha }}",
+              "commit": "${{ github.event.client_payload.commit || github.sha }}",
               "module": "demo_module_repository_for_CICD",
               "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
             }
