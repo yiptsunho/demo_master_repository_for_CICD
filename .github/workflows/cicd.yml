@@ -47,6 +47,7 @@ jobs:
         id: api-tests
         run: |
           cd test-repo
+          npm run fetch-models
           npm test index -- --json > ../test-results.json
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
