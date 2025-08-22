@@ -96,11 +96,11 @@ jobs:
           git commit -m "Update test results for run ${{ github.run_id }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.MODULE_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: reports/junit.xml
+          path: junit.xml
           retention-days: 7
