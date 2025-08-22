@@ -6,6 +6,9 @@ on:
     branches:
       - main
       - uat
+    paths-ignore:
+      - 'README.md'
+      - 'TEST_STATUS.md'
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -52,7 +55,7 @@ jobs:
         if: always()
         id: parse-results
         run: |
-          sudo apt-get update && sudo apt-get install -y libxml2-utils
+          sudo apt-get install -y libxml2-utils
           MODULES=$(xmllint --xpath '//testcase/@classname' junit.xml | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
           echo "# Test Results" > results.txt
           echo "" >> results.txt
@@ -94,6 +97,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git add README.md TEST_STATUS.md
           git commit -m "Update test results for run ${{ github.run_id }}"
+          git pull
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
