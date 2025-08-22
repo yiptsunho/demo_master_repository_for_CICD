@@ -19,14 +19,10 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 172.105.105.144 >> ~/.ssh/known_hosts
+          
           # Deploy to server
-          # if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            rsync -avz --exclude '.git' . root@172.105.105.144:/root/repo/demo_master_repository_for_CICD
-            ssh root@172.105.105.144 'cd /root/repo/demo_master_repository_for_CICD && git pull origin main'
-          # else
-            # rsync -avz --exclude '.git' . user@ci-cd-server:/path/to/app
-            # ssh user@ci-cd-server 'cd /path/to/app && git pull origin uat && composer install --no-dev'
-          # fi
+          rsync -avz --exclude '.git' . root@172.105.105.144:/root/repo/demo_master_repository_for_CICD
+          ssh root@172.105.105.144 'cd /root/repo/demo_master_repository_for_CICD && git pull origin main'
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Checkout Test Repository
@@ -43,47 +39,63 @@ jobs:
         run: |
           cd test-repo
           npm install
+          npm install --save-dev jest-junit jest-github-actions-reporter
       - name: Run API Tests
         id: api-tests
         run: |
           cd test-repo
-          npm run fetch-models
-          npm test index -- --json > ../test-results.json
+          npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
+          cp reports/junit.xml ../junit.xml
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
+      - name: Parse Test Results
+        id: parse-results
+        run: |
+          sudo apt-get update && sudo apt-get install -y libxml2-utils
+          MODULES=$(xmllint --xpath '//testcase/@classname' junit.xml | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
+          echo "# Test Results" > results.txt
+          echo "" >> results.txt
+          echo "## Latest Test Run (Run ${{ github.run_id }})" >> results.txt
+          echo "" >> results.txt
+          echo "| Module | Status | Commit | Timestamp | Run URL |" >> results.txt
+          echo "|--------|--------|--------|-----------|---------|" >> results.txt
+          for module in $MODULES; do
+            FAILED=$(xmllint --xpath "count(//testcase[contains(@classname, '$module/')]/failure)" junit.xml 2>/dev/null || echo 0)
+            STATUS=$([ "$FAILED" -eq 0 ] && echo "✅ Success" || echo "❌ Failure")
+            COMMIT="${{ github.event.client_payload.commit || github.sha }}"
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "| $module | $STATUS | $COMMIT | $TIMESTAMP | [$RUN_URL]($RUN_URL) |" >> results.txt
+          done
+          echo "results<<EOF" >> $GITHUB_OUTPUT
+          cat results.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Update README.md
+        run: |
+          echo "# Main Repository Test Results" > README.md
+          echo "" >> README.md
+          cat results.txt >> README.md
+      - name: Update TEST_STATUS.md
+        run: |
+          if [ ! -f TEST_STATUS.md ]; then
+            echo "# Historical Test Results" > TEST_STATUS.md
+            echo "" >> TEST_STATUS.md
+            echo "| Module | Status | Commit | Timestamp | Run URL |" >> TEST_STATUS.md
+            echo "|--------|--------|--------|-----------|---------|" >> TEST_STATUS.md
+          fi
+          tail -n +5 results.txt >> TEST_STATUS.md
+      - name: Commit Updated Files
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md TEST_STATUS.md
+          git commit -m "Update test results for run ${{ github.run_id }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: test-results.json
+          path: junit.xml
           retention-days: 7
-      - name: Debug MODULE_REPO_TOKEN
-        if: always()
-        run: |
-          echo "MODULE_REPO_TOKEN is set: ${{ secrets.MODULE_REPO_TOKEN != '' }}"
-      - name: Debug Client Payload
-        if: always()
-        run: |
-          echo '{
-            "test_status": "${{ job.status }}",
-            "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "commit": "${{ github.event.client_payload.commit || github.sha }}",
-            "module": "demo_module_repository_for_CICD",
-            "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
-          }'
-      - name: Notify Module Repository
-        if: always()
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.MODULE_REPO_TOKEN }}
-          repository: yiptsunho/demo_module_repository_for_CICD
-          event-type: test-results
-          client-payload: |-
-            {
-              "test_status": "${{ job.status }}",
-              "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "commit": "${{ github.event.client_payload.commit || github.sha }}",
-              "module": "demo_module_repository_for_CICD",
-              "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
-            }
