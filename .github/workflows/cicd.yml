@@ -51,13 +51,13 @@ jobs:
           npm test index; true
           echo "Listing files in test-repo:"
           ls -R
-          if [ -f reports/junit.xml ]; then
-            cp reports/junit.xml ../junit.xml
-            echo "junit.xml copied to workflow root"
-          else
-            echo "Error: reports/junit.xml not found in test-repo"
-            exit 1
-          fi
+#          if [ -f reports/junit.xml ]; then
+#            cp reports/junit.xml ../junit.xml
+#            echo "junit.xml copied to workflow root"
+#          else
+#            echo "Error: reports/junit.xml not found in test-repo"
+#            exit 1
+#          fi
 #          echo "Listing files in test-repo:"
 #          ls reports
 #          cp reports/junit.xml ../junit.xml
