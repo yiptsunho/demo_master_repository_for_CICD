@@ -49,6 +49,7 @@ jobs:
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
       - name: Parse Test Results
+        if: always()
         id: parse-results
         run: |
           sudo apt-get update && sudo apt-get install -y libxml2-utils
@@ -71,11 +72,13 @@ jobs:
           cat results.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
       - name: Update README.md
+        if: always()
         run: |
           echo "# Main Repository Test Results" > README.md
           echo "" >> README.md
           cat results.txt >> README.md
       - name: Update TEST_STATUS.md
+        if: always()
         run: |
           if [ ! -f TEST_STATUS.md ]; then
             echo "# Historical Test Results" > TEST_STATUS.md
@@ -85,6 +88,7 @@ jobs:
           fi
           tail -n +5 results.txt >> TEST_STATUS.md
       - name: Commit Updated Files
+        if: always()
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
@@ -94,6 +98,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
