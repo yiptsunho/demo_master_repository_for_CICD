@@ -55,7 +55,7 @@ jobs:
         if: always()
         id: parse-results
         run: |
-          sudo apt-get install -y libxml2-utils
+          sudo apt-get update && sudo apt-get install -y libxml2-utils
           MODULES=$(xmllint --xpath '//testcase/@classname' junit.xml | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
           echo "# Test Results" > results.txt
           echo "" >> results.txt
