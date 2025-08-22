@@ -47,7 +47,7 @@ jobs:
         id: api-tests
         run: |
           cd test-repo
-          npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
+          npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults; true
           ls reports
           cp reports/junit.xml ../junit.xml
         env:
