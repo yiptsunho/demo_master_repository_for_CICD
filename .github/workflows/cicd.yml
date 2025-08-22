@@ -48,6 +48,7 @@ jobs:
         run: |
           cd test-repo
           npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults; true
+          echo "Listing files in test-repo:"
           ls reports
           cp reports/junit.xml ../junit.xml
         env:
