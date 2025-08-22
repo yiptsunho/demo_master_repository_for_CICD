@@ -46,12 +46,21 @@ jobs:
       - name: Run API Tests
         id: api-tests
         run: |
-          set -e
+#          set -e
           cd test-repo
           npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults; true
           echo "Listing files in test-repo:"
-          ls reports
-          cp reports/junit.xml ../junit.xml
+          ls -R
+          if [ -f reports/junit.xml ]; then
+            cp reports/junit.xml ../junit.xml
+            echo "junit.xml copied to workflow root"
+          else
+            echo "Error: reports/junit.xml not found in test-repo"
+            exit 1
+          fi
+#          echo "Listing files in test-repo:"
+#          ls reports
+#          cp reports/junit.xml ../junit.xml
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
       - name: Parse Test Results
