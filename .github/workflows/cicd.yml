@@ -9,12 +9,20 @@ on:
     paths-ignore:
       - 'README.md'
       - 'TEST_STATUS.md'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
+      - name: Clean up uncommitted changes
+        run: |
+          git restore .
+          git restore --staged .
+          echo "Working directory and staging area cleaned"
       - name: Deploy to CI/CD Server
         run: |
           # Set up SSH key
