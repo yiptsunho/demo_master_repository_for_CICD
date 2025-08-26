@@ -9,12 +9,20 @@ on:
     paths-ignore:
       - 'README.md'
       - 'TEST_STATUS.md'
+      - '.github/workflows/cicd.yml'
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      SERVER_PATH: ${{ secrets.SERVER_PATH }}
+      TEST_REPO: ${{ secrets.TEST_REPO }}
+      API_URL_PROD: ${{ secrets.API_URL_PROD }}
+      API_URL_CI: ${{ secrets.API_URL_CI }}
+      JUNIT_FILE_PATH: junit.xml
     steps:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
@@ -25,21 +33,17 @@ jobs:
           echo "Working directory and staging area cleaned"
       - name: Connect to integration instance
         run: |
-          # Set up SSH key
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 172.105.105.144 >> ~/.ssh/known_hosts
-          
-          # Deploy to server
-          # rsync -avz --exclude '.git' . root@172.105.105.144:/root/repo/demo_master_repository_for_CICD
-          ssh root@172.105.105.144 'cd /root/repo/demo_master_repository_for_CICD && git status && git fetch origin && git reset --hard origin/main && git clean -fd && git status'
+          ssh-keyscan -H ${{ env.SERVER_HOST }} >> ~/.ssh/known_hosts
+          ssh root@${{ env.SERVER_HOST }} "cd ${{ env.SERVER_PATH }} && git status && git fetch origin && git reset --hard origin/main && git clean -fd && git pull origin main && git status"
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Checkout Test Repository
         uses: actions/checkout@v4
         with:
-          repository: yiptsunho/fiyge_test_api
+          repository: ${{ env.TEST_REPO }}
           token: ${{ secrets.TEST_REPO_TOKEN }}
           path: test-repo
       - name: Set up Node.js
@@ -58,27 +62,42 @@ jobs:
           npm test index; true
           # npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
         env:
-          API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
+          # TODO: modify logic to change API_URL depending on whether it is integration instance or prd instance
+          # API_URL: ${{ github.ref == 'refs/heads/main' && env.API_URL_PROD || env.API_URL_CI }}
+          API_URL: ${{ env.API_URL_CI }}
       - name: Parse Test Results
         if: always()
         id: parse-results
         run: |
           cp test-repo/reports/junit.xml junit.xml
-          sudo apt-get update && sudo apt-get install -y libxml2-utils
-          MODULES=$(xmllint --xpath '//testcase/@classname' junit.xml | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
+          sudo apt-get update && sudo apt-get install -y libxml2-utils jq
+          if [ ! -f ${{ env.JUNIT_FILE_PATH }} ]; then
+            echo "Error: ${{ env.JUNIT_FILE_PATH }} not found in workflow root"
+            exit 1
+          fi
+          if [ ! -f module_mapping.json ]; then
+            echo "Error: module_mapping.json not found"
+            exit 1
+          fi
+          MODULES=$(xmllint --xpath '//testcase/@classname' ${{ env.JUNIT_FILE_PATH }} | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
           echo "# Test Results" > results.txt
           echo "" >> results.txt
           echo "## Latest Test Run (Run ${{ github.run_id }})" >> results.txt
           echo "" >> results.txt
-          echo "| Module | Status | Commit | Timestamp | Run URL |" >> results.txt
-          echo "|--------|--------|--------|-----------|---------|" >> results.txt
+          echo "| Module | Repository | Status | Commit | Timestamp | Run URL |" >> results.txt
+          echo "|--------|------------|--------|--------|-----------|---------|" >> results.txt
           for module in $MODULES; do
-            FAILED=$(xmllint --xpath "count(//testcase[contains(@classname, '$module/')]/failure)" junit.xml 2>/dev/null || echo 0)
+            REPO=$(jq -r --arg mod "$module" '.[] | select(.module == $mod) | .repository' module_mapping.json)
+            if [ -z "$REPO" ]; then
+              echo "Warning: No repository mapping found for module $module"
+              REPO="Unknown"
+            fi
+            FAILED=$(xmllint --xpath "count(//testcase[contains(@classname, '$module/')]/failure)" ${{ env.JUNIT_FILE_PATH }} 2>/dev/null || echo 0)
             STATUS=$([ "$FAILED" -eq 0 ] && echo "✅ Success" || echo "❌ Failure")
             COMMIT="${{ github.event.client_payload.commit || github.sha }}"
             TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
             RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "| $module | $STATUS | $COMMIT | $TIMESTAMP | [$RUN_URL]($RUN_URL) |" >> results.txt
+            echo "| $module | $REPO | $STATUS | $COMMIT | $TIMESTAMP | [$RUN_URL]($RUN_URL) |" >> results.txt
           done
           echo "results<<EOF" >> $GITHUB_OUTPUT
           cat results.txt >> $GITHUB_OUTPUT
@@ -95,8 +114,8 @@ jobs:
           if [ ! -f TEST_STATUS.md ]; then
             echo "# Historical Test Results" > TEST_STATUS.md
             echo "" >> TEST_STATUS.md
-            echo "| Module | Status | Commit | Timestamp | Run URL |" >> TEST_STATUS.md
-            echo "|--------|--------|--------|-----------|---------|" >> TEST_STATUS.md
+            echo "| Module | Repository | Status | Commit | Timestamp | Run URL |" >> TEST_STATUS.md
+            echo "|--------|------------|--------|--------|-----------|---------|" >> TEST_STATUS.md
           fi
           tail -n +5 results.txt >> TEST_STATUS.md
       - name: Commit Updated Files
@@ -111,30 +130,33 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify Module Repositories
+        if: always()
+        run: |
+          MODULES=$(xmllint --xpath '//testcase/@classname' ${{ env.JUNIT_FILE_PATH }} | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
+          for module in $MODULES; do
+            REPO=$(jq -r --arg mod "$module" '.[] | select(.module == $mod) | .repository' module_mapping.json)
+            if [ -z "$REPO" ]; then
+              echo "Warning: No repository mapping found for module $module, skipping notification"
+              continue
+            fi
+            FAILED=$(xmllint --xpath "count(//testcase[contains(@classname, '$module/')]/failure)" ${{ env.JUNIT_FILE_PATH }} 2>/dev/null || echo 0)
+            STATUS=$([ "$FAILED" -eq 0 ] && echo "success" || echo "failure")
+            curl -X POST \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: Bearer ${{ secrets.MODULE_REPO_TOKEN }}" \
+              https://api.github.com/repos/$REPO/dispatches \
+              -d "{\"event_type\":\"test-results\",\"client_payload\":{\"test_status\":\"$STATUS\",\"results_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"commit\":\"${{ github.event.client_payload.commit || github.sha }}\",\"module\":\"$module\",\"module_repo_token\":\"${{ secrets.MODULE_REPO_TOKEN }}\"}}"
+          done
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: junit.xml
+          path: ${{ env.JUNIT_FILE_PATH }}
           retention-days: 7
       - name: Clean up uncommitted changes
         if: always()
         run: |
           git restore .
           git restore --staged .
-      - name: Notify Module Repository
-        if: always()
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.MODULE_REPO_TOKEN }}
-          repository: yiptsunho/demo_module_repository_for_CICD
-          event-type: test-results
-          client-payload: |-
-            {
-              "test_status": "${{ job.status }}",
-              "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "commit": "${{ github.event.client_payload.commit || github.sha }}",
-              "module": "demo_module_repository_for_CICD",
-              "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
-            }
