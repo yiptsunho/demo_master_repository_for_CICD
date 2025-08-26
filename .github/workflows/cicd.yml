@@ -23,7 +23,7 @@ jobs:
           git restore .
           git restore --staged .
           echo "Working directory and staging area cleaned"
-      - name: Deploy to CI/CD Server
+      - name: Connect to integration instance
         run: |
           # Set up SSH key
           mkdir -p ~/.ssh
@@ -32,8 +32,8 @@ jobs:
           ssh-keyscan -H 172.105.105.144 >> ~/.ssh/known_hosts
           
           # Deploy to server
-          rsync -avz --exclude '.git' . root@172.105.105.144:/root/repo/demo_master_repository_for_CICD
-          ssh root@172.105.105.144 'cd /root/repo/demo_master_repository_for_CICD && git pull origin main'
+          # rsync -avz --exclude '.git' . root@172.105.105.144:/root/repo/demo_master_repository_for_CICD
+          ssh root@172.105.105.144 'cd /root/repo/demo_master_repository_for_CICD && git status && git fetch origin && git reset --hard origin/main && git clean -fd && git status'
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
       - name: Checkout Test Repository
