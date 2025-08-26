@@ -2,22 +2,6 @@
 
 | Module | Status | Commit | Timestamp | Run URL |
 |--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
 | ai | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
 | calls | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
 | campaigns | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
@@ -40,12 +24,7 @@
 | recruitment | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
 | sales | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
 | survey | ✅ Success | 57740296b150ae9d1e61f96f42fe02b7fe58b980 | 2025-08-26T15:31:53Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17242901030) |
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
-| Module | Status | Commit | Timestamp | Run URL |
-|--------|--------|--------|-----------|---------|
+
 | Module | Status | Commit | Timestamp | Run URL |
 |--------|--------|--------|-----------|---------|
 | ai | ✅ Success | b0a84b57a8dbc5bfb04a9e0ba60f7880b49b1b55 | 2025-08-26T18:07:43Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17246560892](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17246560892) |
