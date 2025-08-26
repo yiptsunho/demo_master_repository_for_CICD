@@ -146,7 +146,7 @@ jobs:
               -H "Accept: application/vnd.github.v3+json" \
               -H "Authorization: Bearer ${{ secrets.MODULE_REPO_TOKEN }}" \
               https://api.github.com/repos/$REPO/dispatches \
-              -d "{\"event_type\":\"test-results\",\"client_payload\":{\"test_status\":\"$STATUS\",\"results_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"commit\":\"${{ github.event.client_payload.commit || github.sha }}\",\"module\":\"$module\",\"module_repo_token\":\"${{ secrets.MODULE_REPO_TOKEN }}\"}}"
+              -d "{\"event_type\":\"test-results\",\"client_payload\":{\"test_status\":\"$STATUS\",\"results_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"commit\":\"${{ github.event.client_payload.commit || github.sha }}\",\"module\":\"$module\",\"repository\":\"$REPO\",\"module_repo_token\":\"${{ secrets.MODULE_REPO_TOKEN }}\"}}"
           done
       - name: Upload Test Results
         if: always()
