@@ -48,7 +48,7 @@ jobs:
         run: |
           cd test-repo
           npm test index; true
-#          npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
+          # npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
           cp reports/junit.xml ../junit.xml
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
