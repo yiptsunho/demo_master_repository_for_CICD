@@ -115,3 +115,18 @@ jobs:
         run: |
           git restore .
           git restore --staged .
+      - name: Notify Module Repository
+        if: always()
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.MODULE_REPO_TOKEN }}
+          repository: yiptsunho/demo_module_repository_for_CICD
+          event-type: test-results
+          client-payload: |-
+            {
+              "test_status": "${{ job.status }}",
+              "results_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "commit": "${{ github.event.client_payload.commit || github.sha }}",
+              "module": "demo_module_repository_for_CICD",
+              "module_repo_token": "${{ secrets.MODULE_REPO_TOKEN }}"
+            }
