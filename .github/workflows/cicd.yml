@@ -96,6 +96,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          git config pull.rebase false
           git add README.md TEST_STATUS.md
           git commit -m "Update test results for run ${{ github.run_id }}"
           git pull
