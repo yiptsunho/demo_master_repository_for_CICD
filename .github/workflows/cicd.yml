@@ -48,6 +48,7 @@ jobs:
         run: |
           cd test-repo
           npm test index; true
+          cp test-repo/reports/junit.xml junit.xml
           # npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
         env:
           API_URL: ${{ github.ref == 'refs/heads/main' && 'http://prod-server:8080' || 'http://ci-cd-server:8080' }}
@@ -55,7 +56,6 @@ jobs:
         if: always()
         id: parse-results
         run: |
-          cp test-repo/reports/junit.xml ../junit.xml
           sudo apt-get update && sudo apt-get install -y libxml2-utils
           MODULES=$(xmllint --xpath '//testcase/@classname' junit.xml | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
           echo "# Test Results" > results.txt
