@@ -26,6 +26,11 @@ jobs:
     steps:
       - name: Checkout Main Repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Pull latest change on main
+        run: |
+          git pull
       - name: Clean up uncommitted changes
         run: |
           git restore .
