@@ -123,9 +123,7 @@ jobs:
       - name: Update README.md
         if: always()
         run: |
-          echo "# Main Repository Test Results" > README.md
-          echo "" >> README.md
-          cat results.txt >> README.md
+          cat results.txt > README.md
       - name: Update TEST_STATUS.md
         if: always()
         run: |
