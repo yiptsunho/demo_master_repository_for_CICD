@@ -2,30 +2,35 @@
 
 # Test Results
 
-## Latest Test Run (Run 17267542372)
+## Latest Test Run (2025-08-27 14:57 UTC)
 
-| Module | Repository | Status | Commit | Timestamp | Run URL |
-|--------|------------|--------|--------|-----------|---------|
-| ai | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| calls | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| campaigns | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| comments | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| contract_management | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| crm | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| dashboards | yiptsunho/demo_module_repository_for_CICD | ❌ Failure | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| data_management | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| development_base | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| docgen | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| email | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| help | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| legal_management | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| manufacturing | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| mlm | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| password_manager | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| payroll | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| product | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| projectivity | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| purchase | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| recruitment | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| sales | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
-| survey | Unknown | ✅ Success | 64dcd4c38b7609f70d6154db6a0526d5661b7dbb | 2025-08-27T13:05:44Z | [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17267542372) |
+**Commit**: `d2675fb6`
+**Run URL**: [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270424784](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270424784)
+
+| Module | Status |
+|--------|--------|
+| ai | ✅ Success |
+| calls | ✅ Success |
+| campaigns | ✅ Success |
+| comments | ✅ Success |
+| contract_management | ✅ Success |
+| crm | ✅ Success |
+| dashboards | ❌ Failure |
+| data_management | ✅ Success |
+| development_base | ✅ Success |
+| docgen | ✅ Success |
+| email | ✅ Success |
+| help | ✅ Success |
+| legal_management | ✅ Success |
+| manufacturing | ✅ Success |
+| mlm | ✅ Success |
+| password_manager | ✅ Success |
+| payroll | ✅ Success |
+| product | ✅ Success |
+| projectivity | ✅ Success |
+| purchase | ✅ Success |
+| recruitment | ✅ Success |
+| sales | ✅ Success |
+| survey | ✅ Success |
+
+![Test Status](https://img.shields.io/badge/Test%20Status-failure-green)
