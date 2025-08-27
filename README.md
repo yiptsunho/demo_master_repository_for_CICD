@@ -2,10 +2,10 @@
 
 # Test Results
 
-## Latest Test Run (2025-08-27 14:57 UTC)
+## Latest Test Run (2025-08-27 15:12 UTC)
 
-**Commit**: `d2675fb6`
-**Run URL**: [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270424784](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270424784)
+**Commit**: `20c23f6e`
+**Run URL**: [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270732989](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270732989)
 
 | Module | Status |
 |--------|--------|
@@ -33,4 +33,4 @@
 | sales | ✅ Success |
 | survey | ✅ Success |
 
-![Test Status](https://img.shields.io/badge/Test%20Status-failure-green)
+![Test Status](https://img.shields.io/badge/Test%20Status-failure-red)
