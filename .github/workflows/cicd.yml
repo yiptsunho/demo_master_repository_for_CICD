@@ -115,7 +115,8 @@ jobs:
             echo "$module,$REPO,$STATUS,$COMMIT,$TIMESTAMP,$RUN_URL" >> results_history.txt
           done
           echo "" >> results.txt
-          echo "![Test Status](https://img.shields.io/badge/Test%20Status-${{ steps.api-tests.outcome }}-green)" >> results.txt
+          BADGE_COLOR=$([[ "${{ steps.api-tests.outcome }}" == "success" ]] && echo "green" || echo "red")
+          echo "![Test Status](https://img.shields.io/badge/Test%20Status-${{ steps.api-tests.outcome }}-$BADGE_COLOR)" >> results.txt
           echo "results<<EOF" >> $GITHUB_OUTPUT
           cat results.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
