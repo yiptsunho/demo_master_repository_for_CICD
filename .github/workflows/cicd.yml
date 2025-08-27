@@ -71,7 +71,6 @@ jobs:
         run: |
           cd test-repo
           npm test index; true
-          # npx jest --reporters=jest-junit --reporters=jest-github-actions-reporter --testLocationInResults
         env:
           # TODO: modify logic to change API_URL depending on whether it is integration instance or prd instance
           # API_URL: ${{ github.ref == 'refs/heads/main' && env.API_URL_PROD || env.API_URL_CI }}
@@ -91,12 +90,19 @@ jobs:
             exit 1
           fi
           MODULES=$(xmllint --xpath '//testcase/@classname' ${{ env.JUNIT_FILE_PATH }} | grep -oE '[a-z_]+/[a-z_]+' | cut -d'/' -f1 | sort -u)
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+          COMMIT="${{ github.event.client_payload.commit || github.sha }}"
+          COMMIT_SHORT=$(echo "$COMMIT" | cut -c1-8)
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "# Test Results" > results.txt
           echo "" >> results.txt
-          echo "## Latest Test Run (Run ${{ github.run_id }})" >> results.txt
+          echo "## Latest Test Run ($TIMESTAMP)" >> results.txt
           echo "" >> results.txt
-          echo "| Module | Repository | Status | Commit | Timestamp | Run URL |" >> results.txt
-          echo "|--------|------------|--------|--------|-----------|---------|" >> results.txt
+          echo "**Commit**: \`$COMMIT_SHORT\`" >> results.txt
+          echo "**Run URL**: [$RUN_URL]($RUN_URL)" >> results.txt
+          echo "" >> results.txt
+          echo "| Module | Status |" >> results.txt
+          echo "|--------|--------|" >> results.txt
           for module in $MODULES; do
             REPO=$(jq -r --arg mod "$module" '.[] | select(.module == $mod) | .repository' module_mapping.json)
             if [ -z "$REPO" ]; then
@@ -105,11 +111,11 @@ jobs:
             fi
             FAILED=$(xmllint --xpath "count(//testcase[contains(@classname, '$module/')]/failure)" ${{ env.JUNIT_FILE_PATH }} 2>/dev/null || echo 0)
             STATUS=$([ "$FAILED" -eq 0 ] && echo "✅ Success" || echo "❌ Failure")
-            COMMIT="${{ github.event.client_payload.commit || github.sha }}"
-            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-            RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "| $module | $REPO | $STATUS | $COMMIT | $TIMESTAMP | [$RUN_URL]($RUN_URL) |" >> results.txt
+            echo "| $module | $STATUS |" >> results.txt
+            echo "$module,$REPO,$STATUS,$COMMIT,$TIMESTAMP,$RUN_URL" >> results_history.txt
           done
+          echo "" >> results.txt
+          echo "![Test Status](https://img.shields.io/badge/Test%20Status-${{ steps.api-tests.outcome }}-green)" >> results.txt
           echo "results<<EOF" >> $GITHUB_OUTPUT
           cat results.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -128,7 +134,9 @@ jobs:
             echo "| Module | Repository | Status | Commit | Timestamp | Run URL |" >> TEST_STATUS.md
             echo "|--------|------------|--------|--------|-----------|---------|" >> TEST_STATUS.md
           fi
-          tail -n +5 results.txt >> TEST_STATUS.md
+          cat results_history.txt | while IFS=',' read -r module repo status commit timestamp run_url; do
+            echo "| $module | $repo | $status | $commit | $timestamp | [$run_url]($run_url) |" >> TEST_STATUS.md
+          done
       - name: Commit Updated Files
         if: always()
         run: |
