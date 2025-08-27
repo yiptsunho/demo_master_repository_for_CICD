@@ -1,36 +1,34 @@
-# Main Repository Test Results
-
 # Test Results
 
-## Latest Test Run (2025-08-27 15:12 UTC)
+## Latest Test Run (2025-08-27 19:40 UTC)
 
-**Commit**: `20c23f6e`
-**Run URL**: [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270732989](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17270732989)
+**Commit**: `65aa30d7`
+**Run URL**: [https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17276899609](https://github.com/yiptsunho/demo_master_repository_for_CICD/actions/runs/17276899609)
 
 | Module | Status |
 |--------|--------|
-| ai | ✅ Success |
-| calls | ✅ Success |
-| campaigns | ✅ Success |
-| comments | ✅ Success |
-| contract_management | ✅ Success |
-| crm | ✅ Success |
+| ai | ❌ Failure |
+| calls | ❌ Failure |
+| campaigns | ❌ Failure |
+| comments | ❌ Failure |
+| contract_management | ❌ Failure |
+| crm | ❌ Failure |
 | dashboards | ❌ Failure |
-| data_management | ✅ Success |
-| development_base | ✅ Success |
-| docgen | ✅ Success |
-| email | ✅ Success |
-| help | ✅ Success |
-| legal_management | ✅ Success |
-| manufacturing | ✅ Success |
-| mlm | ✅ Success |
-| password_manager | ✅ Success |
-| payroll | ✅ Success |
-| product | ✅ Success |
-| projectivity | ✅ Success |
-| purchase | ✅ Success |
-| recruitment | ✅ Success |
-| sales | ✅ Success |
-| survey | ✅ Success |
+| data_management | ❌ Failure |
+| development_base | ❌ Failure |
+| docgen | ❌ Failure |
+| email | ❌ Failure |
+| help | ❌ Failure |
+| legal_management | ❌ Failure |
+| manufacturing | ❌ Failure |
+| mlm | ❌ Failure |
+| password_manager | ❌ Failure |
+| payroll | ❌ Failure |
+| product | ❌ Failure |
+| projectivity | ❌ Failure |
+| purchase | ❌ Failure |
+| recruitment | ❌ Failure |
+| sales | ❌ Failure |
+| survey | ❌ Failure |
 
 ![Test Status](https://img.shields.io/badge/Test%20Status-failure-red)
